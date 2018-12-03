@@ -1,0 +1,45 @@
+version 2.0
+
+config setup
+  virtual-private=%v4:10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12,%v4:!192.168.42.0/24,%v4:!192.168.43.0/24
+  protostack=netkey
+  interfaces=%defaultroute
+  uniqueids=no
+
+conn shared
+  left=%defaultroute
+  leftid=158.69.66.2
+  right=%any
+  encapsulation=yes
+  authby=secret
+  pfs=no
+  rekey=no
+  keyingtries=5
+  dpddelay=30
+  dpdtimeout=120
+  dpdaction=clear
+#  ike=aes256-sha2,aes128-sha2,aes256-sha1,aes128-sha1,aes256-sha2;modp1024,aes128-sha1;modp1024
+#  phase2alg=aes_gcm-null,aes128-sha1,aes256-sha1,aes256-sha2_512,aes128-sha2,aes256-sha2
+  sha2-truncbug=no
+#  aggressive=yes
+  phase2alg=aes256-sha1;modp1024
+  keyexchange=ike
+  ike=aes256-sha1;modp1024
+
+conn xauth-psk
+#  ikelifetime=12h
+#  lifetime=8h
+  auto=add
+  leftsubnet=0.0.0.0/0
+  rightaddresspool=192.168.43.10-192.168.43.250
+  modecfgdns="8.8.8.8, 8.8.4.4"
+  leftxauthserver=yes
+  rightxauthclient=yes
+  leftmodecfgserver=yes
+  rightmodecfgclient=yes
+  modecfgpull=yes
+  xauthby=file # xauthby=alwaysok MUST NOT be used with PSK
+  ike-frag=yes
+  ikev2=never
+  cisco-unity=yes
+  also=shared
